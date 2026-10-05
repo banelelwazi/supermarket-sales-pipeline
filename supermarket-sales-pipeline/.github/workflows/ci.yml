@@ -1,0 +1,88 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: supermarket
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      PGHOST: localhost
+      PGPORT: "5432"
+      PGUSER: postgres
+      PGPASSWORD: postgres
+      PGDATABASE: supermarket
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements-dev.txt
+
+      - name: Lint
+        run: |
+          ruff check .
+          ruff format --check .
+
+      - name: Unit and integration tests
+        run: pytest
+
+      - name: "End to end: clean day loads and every dbt test passes"
+        env:
+          INCIDENT_PROBABILITY: "0"
+          STORE_OUTAGE_PROBABILITY: "0"
+        run: |
+          python -m pipeline init-db
+          python -m pipeline backfill --start 2026-09-25T05:00 --end 2026-09-25T18:00
+
+      - name: "End to end: a faulty till must fail the run (exit code 1)"
+        env:
+          INCIDENT_PROBABILITY: "1"
+          BAD_RECORD_RATE: "0.3"
+        run: |
+          set +e
+          python -m pipeline batch --hour 2026-09-26T09:00
+          code=$?
+          set -e
+          if [ "$code" -ne 1 ]; then
+            echo "Expected the pipeline to exit with 1 on bad data, got $code"
+            exit 1
+          fi
+          echo "Bad data was caught and the run failed as it should"
+
+      - name: Re-running the same hours must not change the row count
+        env:
+          INCIDENT_PROBABILITY: "0"
+          STORE_OUTAGE_PROBABILITY: "0"
+        run: |
+          before=$(psql -Atc "select count(*) from raw.pos_transactions")
+          python -m pipeline backfill --start 2026-09-25T05:00 --end 2026-09-25T18:00 --skip-dbt
+          after=$(psql -Atc "select count(*) from raw.pos_transactions")
+          echo "rows before: $before, after: $after"
+          test "$before" -eq "$after"

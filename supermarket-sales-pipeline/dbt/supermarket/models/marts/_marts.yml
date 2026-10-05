@@ -1,0 +1,82 @@
+version: 2
+
+models:
+  - name: dim_store
+    description: One row per store, with trading hours and size.
+    columns:
+      - name: store_id
+        description: Store code, for example JHB01.
+        data_tests: [unique, not_null]
+
+  - name: dim_product
+    description: Product catalogue with VAT treatment.
+    columns:
+      - name: product_sku
+        data_tests: [unique, not_null]
+      - name: is_zero_rated
+        description: True for basic foods that carry 0% VAT in South Africa.
+
+  - name: fct_sales
+    description: >
+      One row per line sold. The central fact table. Built incrementally from
+      raw.pos_transactions using loaded_at.
+    columns:
+      - name: sales_line_id
+        description: transaction_id plus line_number.
+        data_tests: [unique, not_null]
+      - name: store_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_store')
+                field: store_id
+      - name: product_sku
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_product')
+                field: product_sku
+      - name: payment_method
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["card", "cash", "mobile_wallet"]
+      - name: quantity
+        data_tests: [positive_value]
+      - name: unit_price
+        data_tests: [positive_value]
+      - name: discount_amount
+        data_tests:
+          - positive_value:
+              arguments:
+                allow_zero: true
+      - name: net_amount
+        description: What the customer paid for the line, VAT inclusive.
+        data_tests:
+          - positive_value:
+              arguments:
+                allow_zero: true
+      - name: vat_amount
+        description: VAT portion of net_amount. Null would mean the product was not in the catalogue.
+        data_tests: [not_null]
+      - name: sales_date
+        description: Trading date in South African time.
+        data_tests: [not_null]
+
+  - name: agg_hourly_store_sales
+    description: Revenue, basket count and average basket value per store per hour (SAST).
+    columns:
+      - name: revenue
+        data_tests: [positive_value]
+      - name: avg_basket_value
+        data_tests:
+          - positive_value
+          - not_null
+
+  - name: agg_daily_category_sales
+    description: Daily revenue and units by product category (SAST dates).
+    columns:
+      - name: category
+        data_tests: [not_null]

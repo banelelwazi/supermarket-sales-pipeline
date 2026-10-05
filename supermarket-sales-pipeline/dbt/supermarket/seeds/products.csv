@@ -1,0 +1,48 @@
+product_sku,product_name,category,unit_price,vat_rate
+SKU-10001,Brown Bread 700g,Bakery,17.99,0.00
+SKU-10002,White Bread 700g,Bakery,19.49,0.15
+SKU-10003,Hot Dog Rolls 6 Pack,Bakery,22.99,0.15
+SKU-10004,Full Cream Milk 2L,Dairy & Eggs,36.99,0.00
+SKU-10005,Amasi 2L,Dairy & Eggs,42.99,0.00
+SKU-10006,Cheddar Cheese 900g,Dairy & Eggs,109.99,0.15
+SKU-10007,Plain Yoghurt 1kg,Dairy & Eggs,39.99,0.15
+SKU-10008,Large Eggs 18 Pack,Dairy & Eggs,64.99,0.00
+SKU-10009,Butter 500g,Dairy & Eggs,79.99,0.15
+SKU-10010,Maize Meal 5kg,Pantry,72.99,0.00
+SKU-10011,Maize Meal 10kg,Pantry,129.99,0.00
+SKU-10012,Long Grain Rice 2kg,Pantry,44.99,0.00
+SKU-10013,White Sugar 2.5kg,Pantry,54.99,0.15
+SKU-10014,Sunflower Oil 2L,Pantry,69.99,0.00
+SKU-10015,Samp 2kg,Pantry,32.99,0.00
+SKU-10016,Sugar Beans 1kg,Pantry,39.99,0.00
+SKU-10017,Pilchards in Tomato Sauce 400g,Pantry,27.99,0.00
+SKU-10018,Cake Flour 2.5kg,Pantry,44.99,0.15
+SKU-10019,Spaghetti 500g,Pantry,18.99,0.15
+SKU-10020,Instant Noodles 5 Pack,Pantry,24.99,0.15
+SKU-10021,Peanut Butter 400g,Pantry,39.99,0.15
+SKU-10022,Rooibos Tea Bags 80s,Pantry,49.99,0.15
+SKU-10023,Instant Coffee 200g,Pantry,89.99,0.15
+SKU-10024,Chicken Braai Pack 1kg,Meat,89.99,0.15
+SKU-10025,Beef Mince 500g,Meat,69.99,0.15
+SKU-10026,Boerewors 1kg,Meat,109.99,0.15
+SKU-10027,Potatoes 7kg,Produce,79.99,0.00
+SKU-10028,Onions 2kg,Produce,32.99,0.00
+SKU-10029,Tomatoes 1kg,Produce,29.99,0.00
+SKU-10030,Bananas 1kg,Produce,24.99,0.00
+SKU-10031,Apples 1.5kg,Produce,34.99,0.00
+SKU-10032,Cabbage Each,Produce,19.99,0.00
+SKU-10033,Cola 2L,Beverages,24.99,0.15
+SKU-10034,Fruit Juice 1L,Beverages,26.99,0.15
+SKU-10035,Still Water 5L,Beverages,22.99,0.15
+SKU-10036,Dishwashing Liquid 750ml,Household,29.99,0.15
+SKU-10037,Washing Powder 2kg,Household,74.99,0.15
+SKU-10038,Toilet Paper 9 Pack,Household,64.99,0.15
+SKU-10039,Bleach 1.5L,Household,26.99,0.15
+SKU-10040,Bath Soap 4 Pack,Personal Care,32.99,0.15
+SKU-10041,Toothpaste 100ml,Personal Care,24.99,0.15
+SKU-10042,Roll-on Deodorant 50ml,Personal Care,34.99,0.15
+SKU-10043,Potato Chips 125g,Snacks,21.99,0.15
+SKU-10044,Chocolate Slab 150g,Snacks,34.99,0.15
+SKU-10045,Tea Biscuits 200g,Snacks,19.99,0.15
+SKU-10046,Frozen Chicken Portions 2kg,Frozen,99.99,0.15
+SKU-10047,Vanilla Ice Cream 2L,Frozen,54.99,0.15

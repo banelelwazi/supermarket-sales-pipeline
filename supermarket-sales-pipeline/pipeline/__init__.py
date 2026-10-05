@@ -1,0 +1,1 @@
+"""Hourly supermarket sales pipeline."""

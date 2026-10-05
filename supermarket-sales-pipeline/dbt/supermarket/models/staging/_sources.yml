@@ -1,0 +1,18 @@
+version: 2
+
+sources:
+  - name: raw
+    description: Landing tables written by the Python loader after validation.
+    schema: raw
+    tables:
+      - name: pos_transactions
+        description: One row per line on a till slip, exactly as the POS reported it.
+        columns:
+          - name: transaction_id
+            description: Till slip id, unique per store and hour. Shared by every line on the slip.
+          - name: line_number
+            description: Position of the line on the slip, starting at 1.
+          - name: loaded_at
+            description: When the loader inserted the row. Drives incremental models.
+      - name: rejected_records
+        description: Quarantine for rows that failed validation, with the reasons.

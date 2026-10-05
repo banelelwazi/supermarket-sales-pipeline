@@ -1,0 +1,7 @@
+store_id,store_name,city,province,store_size,opening_hour,closing_hour,till_count
+JHB01,FreshWay Braamfontein,Johannesburg,Gauteng,medium,7,21,6
+JHB02,FreshWay Soweto,Johannesburg,Gauteng,large,7,21,10
+PTA01,FreshWay Hatfield,Pretoria,Gauteng,medium,7,21,6
+CPT01,FreshWay Bellville,Cape Town,Western Cape,large,7,21,9
+CPT02,FreshWay Khayelitsha,Cape Town,Western Cape,medium,8,20,5
+DBN01,FreshWay Umlazi,Durban,KwaZulu-Natal,small,8,20,4

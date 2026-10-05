@@ -1,0 +1,36 @@
+name: supermarket
+version: "1.0.0"
+config-version: 2
+profile: supermarket
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+target-path: "target"
+clean-targets: ["target", "dbt_packages", "logs"]
+
+vars:
+  local_timezone: "Africa/Johannesburg"
+
+models:
+  supermarket:
+    staging:
+      +materialized: view
+      +schema: staging
+    marts:
+      +materialized: table
+      +schema: marts
+
+seeds:
+  supermarket:
+    +schema: reference
+    stores:
+      +column_types:
+        opening_hour: integer
+        closing_hour: integer
+        till_count: integer
+    products:
+      +column_types:
+        unit_price: numeric(10, 2)
+        vat_rate: numeric(4, 2)

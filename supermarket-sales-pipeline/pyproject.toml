@@ -1,0 +1,18 @@
+[project]
+name = "supermarket-sales-pipeline"
+version = "1.0.0"
+description = "Automated hourly sales pipeline for a supermarket chain, with data tests and alerting"
+requires-python = ">=3.11"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+extend-exclude = ["dbt"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["integration: needs a running Postgres (set the PG* environment variables)"]
+addopts = "-ra"

@@ -1,0 +1,73 @@
+name: Hourly sales pipeline
+
+on:
+  schedule:
+    # Five past every hour, so the till export for the previous hour has landed.
+    - cron: "5 * * * *"
+  workflow_dispatch:
+    inputs:
+      batch_hour:
+        description: "Reload one hour (UTC, e.g. 2026-10-05T13:00). Leave empty for a normal run."
+        required: false
+        default: ""
+
+# Never let two runs load at the same time. A late run waits instead of overlapping.
+concurrency:
+  group: hourly-sales-pipeline
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  load:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PGHOST: ${{ secrets.PGHOST }}
+      PGPORT: ${{ secrets.PGPORT }}
+      PGUSER: ${{ secrets.PGUSER }}
+      PGPASSWORD: ${{ secrets.PGPASSWORD }}
+      PGDATABASE: ${{ secrets.PGDATABASE }}
+      PGSSLMODE: require
+      SMTP_HOST: ${{ secrets.SMTP_HOST }}
+      SMTP_PORT: ${{ secrets.SMTP_PORT }}
+      SMTP_USER: ${{ secrets.SMTP_USER }}
+      SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+      ALERT_EMAIL_FROM: ${{ secrets.ALERT_EMAIL_FROM }}
+      ALERT_EMAIL_TO: ${{ secrets.ALERT_EMAIL_TO }}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      HEALTHCHECK_URL: ${{ secrets.HEALTHCHECK_URL }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Make sure schemas and raw tables exist
+        run: python -m pipeline init-db
+
+      - name: Run the pipeline
+        env:
+          # Passed through env rather than inlined, so user input never becomes shell code.
+          BATCH_HOUR: ${{ inputs.batch_hour }}
+        run: |
+          if [ -n "$BATCH_HOUR" ]; then
+            python -m pipeline batch --hour "$BATCH_HOUR"
+          else
+            python -m pipeline hourly
+          fi
+
+      - name: Keep dbt results for debugging
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dbt-run-results-${{ github.run_id }}
+          path: dbt/supermarket/target/run_results.json
+          retention-days: 7
+          if-no-files-found: ignore

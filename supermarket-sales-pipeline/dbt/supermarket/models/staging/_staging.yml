@@ -1,0 +1,39 @@
+version: 2
+
+models:
+  - name: stg_pos_transactions
+    description: Cleaned POS lines with a surrogate key and local (SAST) timestamps.
+    columns:
+      - name: sales_line_id
+        description: Surrogate key, transaction_id plus line_number.
+        data_tests: [unique, not_null]
+      - name: payment_method
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["card", "cash", "mobile_wallet"]
+
+  - name: stg_stores
+    description: Store reference data from the stores seed.
+    columns:
+      - name: store_id
+        data_tests: [unique, not_null]
+      - name: store_size
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["small", "medium", "large"]
+
+  - name: stg_products
+    description: Product catalogue from the products seed.
+    columns:
+      - name: product_sku
+        data_tests: [unique, not_null]
+      - name: unit_price
+        data_tests: [positive_value]
+      - name: vat_rate
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [0.00, 0.15]
+                quote: false

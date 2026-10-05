@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+.pytest_cache/
+.ruff_cache/
+
+data/landing/*
+data/archive/*
+!data/landing/.gitkeep
+!data/archive/.gitkeep
+
+dbt/supermarket/target/
+dbt/supermarket/dbt_packages/
+dbt/supermarket/logs/
+logs/

@@ -1,0 +1,14 @@
+# Reads the same PG* variables as the Python loader, so there is one config.
+supermarket:
+  target: prod
+  outputs:
+    prod:
+      type: postgres
+      host: "{{ env_var('PGHOST', 'localhost') }}"
+      port: "{{ env_var('PGPORT', '5432') | as_number }}"
+      user: "{{ env_var('PGUSER', 'postgres') }}"
+      password: "{{ env_var('PGPASSWORD', 'postgres') }}"
+      dbname: "{{ env_var('PGDATABASE', 'supermarket') }}"
+      sslmode: "{{ env_var('PGSSLMODE', 'prefer') }}"
+      schema: analytics
+      threads: 4
